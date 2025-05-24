@@ -1,0 +1,7 @@
+# Không push các file/thư mục cấu hình cá nhân
+node_modules/
+.env
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
