@@ -127,5 +127,88 @@ router.get('/verify-email', async (req, res) => {
     res.status(500).send('Lỗi server!');
   }
 });
+// Đăng nhập tài khoản
+router.post('/login', async (req, res) => {
+  const { email, password, roleID } = req.body;
+  if (!email || !password || !roleID) {
+    return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin!' });
+  }
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('email', email)
+      .input('roleID', roleID)
+      .query('SELECT * FROM Accounts WHERE email = @email AND roleID = @roleID');
+    if (result.recordset.length === 0) {
+      return res.status(400).json({ message: 'Email hoặc vai trò không đúng!' });
+    }
+    const user = result.recordset[0];
+    if (!user.isVerified) {
+      return res.status(403).json({ message: 'Tài khoản chưa xác thực email!' });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Mật khẩu không đúng!' });
+    }
+    // Tạo JWT token
+    const token = jwt.sign(
+      { accID: user.accID, email: user.email, roleID: user.roleID },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    // Trả về user (không trả password, verifyToken)
+    const { password: pw, verifyToken, ...userData } = user;
+    res.json({ token, user: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Lỗi server!' });
+  }
+});
 
+// Đăng nhập bằng Google
+router.post('/google-login', async (req, res) => {
+  const { email, name, picture, googleId, roleID } = req.body;
+  // Chỉ cho phép role 2 hoặc 3
+  if (!roleID || isNaN(roleID) || (parseInt(roleID) !== 2 && parseInt(roleID) !== 3)) {
+    return res.status(400).json({ message: 'roleID không hợp lệ! Chỉ cho phép Job Seeker hoặc Employer' });
+  }
+  try {
+    const pool = await poolPromise;
+    // Kiểm tra user đã tồn tại chưa
+    let result = await pool.request()
+      .input('email', email)
+      .input('roleID', roleID)
+      .query('SELECT * FROM Accounts WHERE email = @email AND roleID = @roleID');
+    let user;
+    if (result.recordset.length === 0) {
+      // Nếu chưa có thì tạo mới (tự động xác thực email)
+      await pool.request()
+        .input('username', name)
+        .input('email', email)
+        .input('password', '') // Không có password
+        .input('isVerified', 1)
+        .input('verifyToken', null)
+        .input('roleID', roleID)
+        .query(`INSERT INTO Accounts (username, email, password, isVerified, verifyToken, roleID) 
+                VALUES (@username, @email, @password, @isVerified, @verifyToken, @roleID)`);
+      // Lấy lại user vừa tạo
+      result = await pool.request()
+        .input('email', email)
+        .input('roleID', roleID)
+        .query('SELECT * FROM Accounts WHERE email = @email AND roleID = @roleID');
+    }
+    user = result.recordset[0];
+    // Tạo JWT token
+    const token = jwt.sign(
+      { accID: user.accID, email: user.email, roleID: user.roleID },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    const { password, verifyToken, ...userData } = user;
+    res.json({ token, user: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Lỗi server!' });
+  }
+});
 module.exports = router;

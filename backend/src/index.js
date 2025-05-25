@@ -20,7 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 
 // Chạy server
-const PORT = 5000;
+const PORT = 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 }); 
