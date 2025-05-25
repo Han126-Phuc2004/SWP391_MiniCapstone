@@ -1,0 +1,113 @@
+.homepage-container {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f7f8fa;
+  min-height: 100vh;
+}
+
+.banner {
+  background: linear-gradient(90deg, #1dbf73 0%, #0a8754 100%);
+  color: #fff;
+  padding: 60px 0 40px 0;
+  text-align: center;
+}
+
+.banner h1 {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.banner p {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+}
+
+.cta-btn {
+  background: #fff;
+  color: #1dbf73;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cta-btn:hover {
+  background: #e6f9f0;
+}
+
+.categories {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin: 40px 0 24px 0;
+}
+
+.category-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px 32px;
+  text-align: center;
+  min-width: 180px;
+  transition: box-shadow 0.2s;
+}
+
+.category-card:hover {
+  box-shadow: 0 4px 16px rgba(30,191,115,0.15);
+}
+
+.jobs-section {
+  max-width: 900px;
+  margin: 0 auto 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px;
+}
+
+.jobs-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  color: #1dbf73;
+}
+
+.job-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.job-card {
+  background: #f7f8fa;
+  border-radius: 12px;
+  padding: 20px;
+  flex: 1 1 250px;
+  min-width: 220px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 16px rgba(30,191,115,0.12);
+}
+
+.job-title {
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.job-company {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.job-price {
+  color: #1dbf73;
+  font-weight: 600;
+  font-size: 1.1rem;
+} 

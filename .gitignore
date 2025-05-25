@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Môi trường
+.env
+.env.local
+
+# Log
+*.log
+
+# VSCode, IDE
+.vscode/
+.idea/
+
+# Database local
+database/*.mdf
+database/*.ldf
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
